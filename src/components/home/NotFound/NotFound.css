@@ -1,0 +1,13 @@
+.content-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.text {
+    font-family: 'Helvetica, Arial, sans-serif';
+    font-weight: bold;
+    font-size: '72px';
+    text-align: center;
+}

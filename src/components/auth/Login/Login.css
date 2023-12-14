@@ -1,0 +1,24 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-form label {
+  margin-bottom: 5px;
+  font-size: 1em;
+  font-weight: bold;
+  color: #240d02; /* Phoenix Suns orange for label text */
+}
+
+.login-form input {
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 1em;
+  color: #e56020; /* Phoenix Suns orange for input text */
+}
+
+.login-form input:focus {
+  outline: none;
+  border: 2px solid #e56020; /* Highlight border color on focus */
+  border-radius: 5px;
+}
