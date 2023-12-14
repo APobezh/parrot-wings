@@ -1,4 +1,4 @@
-import React, { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, FC } from "react";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
@@ -12,8 +12,8 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = () => {
     setIsAuthenticated(true);

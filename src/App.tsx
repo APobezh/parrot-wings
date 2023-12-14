@@ -1,4 +1,4 @@
-import React from "react";
+import { FC } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -12,7 +12,7 @@ import { AuthProvider, useAuth } from "./components/auth/AuthContext";
 
 import "./styles/App.css";
 
-const App: React.FC = () => {
+const App: FC = () => {
   return (
     <AuthProvider>
       <Router>
@@ -29,7 +29,7 @@ const App: React.FC = () => {
   );
 };
 
-const HomeRedirect: React.FC = () => {
+const HomeRedirect: FC = () => {
   const { isAuthenticated } = useAuth();
 
   return isAuthenticated ? (

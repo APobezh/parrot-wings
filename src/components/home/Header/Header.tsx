@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import './Header.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,7 +6,7 @@ interface HeaderProps {
   firstName: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ firstName }) => {
+const Header: FC<HeaderProps> = ({ firstName }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const navigate = useNavigate();
 

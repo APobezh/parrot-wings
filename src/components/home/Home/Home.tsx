@@ -1,17 +1,18 @@
-// Home.tsx
-import React, { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import BankAccount from '../BankAccount/BankAccount';
 import TransactionHistory from '../BankAccount/TransactionHistory/TransactionHistory';
 import { fetchUserData } from '../../api/api';
 import './Home.css';
 
-const Home: React.FC = () => {
+// TODO: Fix fetch user data to fetch data after every page refresh
+const Home: FC = () => {
   const [userData, setUserData] = useState<{ firstName: string; balance: number } | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        console.log('Fetching user data');
         const user = await fetchUserData();
         setUserData(user);
       } catch (error: any) {
@@ -34,4 +35,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-

@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { FC, useState } from 'react';
 import Login from './../Login/Login';
 import SignUp from './../SignUp/SignUp';
 import './AuthForm.css';
 
-const AuthForm: React.FC = () => {
+const AuthForm: FC = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
 
   const handleTabChange = (tab: 'login' | 'signup') => {

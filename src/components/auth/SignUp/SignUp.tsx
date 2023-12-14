@@ -1,9 +1,9 @@
-import React from 'react';
+import { FC, FormEvent } from 'react';
 import './SignUp.css';
 import Button from '../../home/common/Button/Button';
 
-const SignUp: React.FC = () => {
-  const handleSubmit = (e: React.FormEvent) => {
+const SignUp: FC = () => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     console.log("Submit Sign Up form")
   };
