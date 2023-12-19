@@ -19,6 +19,11 @@ const mockedLoginResponse = {
   message: 'Login successful',
 };
 
+// Mocked register response
+const mockedRegisterResponse = {
+  message: 'Register and Login successful',
+};
+
 // Mocked transaction response
 const mockedTransactionResponse = {
   transactionStatus: 'success',
@@ -44,7 +49,15 @@ app.post('/api/Login', (req, res) => {
   res.status(200).json(mockedLoginResponse);
 });
 
+app.post('/api/Register', (req, res) => {
+  res.status(200).json(mockedRegisterResponse);
+});
+
 app.post('/api/Transaction/SendMoney', (req, res) => {
+  res.json(mockedTransactionResponse);
+});
+
+app.post('/api/Transaction/TopUpMoney', (req, res) => {
   res.json(mockedTransactionResponse);
 });
 

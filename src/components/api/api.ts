@@ -8,6 +8,13 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface RegisterRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 export interface LoginResponse {
   message: string;
 }
@@ -20,6 +27,11 @@ export interface UserDataResponse {
 export interface TransactionRequest {
   amount: number;
   recipientEmail: string;
+}
+
+export interface TopUpTransactionRequest {
+  amount: number;
+  incomeSource: string;
 }
 
 export interface TransactionResponse {
@@ -72,6 +84,23 @@ export const loginUser = async (
   }
 };
 
+// TODO #1: Send encrypted user password after DB schema fix
+export const registerUser = async (
+  credentials: RegisterRequest
+): Promise<LoginResponse> => {
+  try {
+    const response = await axios.post(`${mockApiUrl}/Register`, credentials);
+
+    if (response.status === 200) {
+      return { message: response.data.message };
+    } else {
+      throw new Error("Registration or authentication failed. Please check your credentials.");
+    }
+  } catch (error) {
+    throw new Error("Registration or authentication failed. Please try again later.");
+  }
+};
+
 export const fetchTransactionHistory = async (
   request: TransactionHistoryRequest
 ): Promise<TransactionHistoryResponse> => {
@@ -97,5 +126,19 @@ export const sendMoney = async (
     return response.data;
   } catch (error: any) {
     throw new Error(`Error sending money: ${error.message}`);
+  }
+};
+
+export const topUpMoney = async (
+  data: TopUpTransactionRequest
+): Promise<TransactionResponse> => {
+  try {
+    const response = await axios.post(
+      `${mockApiUrl}/Transaction/TopUpMoney`,
+      data
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(`Error top up money: ${error.message}`);
   }
 };

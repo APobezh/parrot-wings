@@ -3,18 +3,18 @@ import "./BankAccount.css";
 import Button from "../common/Button/Button";
 import BalanceDisplay from "./BalanceDisplay/BalanceDisplay";
 import MoneySendingForm from "./MoneySending/MoneySendingForm";
+import TopUpForm from "./TopUp/TopUpForm";
 import TransactionPopup from "./TransactionPopup/TransactionPopup";
-import validateEmail from "../../../utils/validation";
-import { sendMoney, TransactionResponse } from "../../api/api";
+import { validateEmail } from "../../../utils/validation";
+import { sendMoney, topUpMoney, TransactionResponse } from "../../api/api";
 
 interface BankAccountProps {
   balance: number;
 }
 
-const BankAccount: FC<BankAccountProps> = ({
-  balance: initialBalance,
-}) => {
-  const [isSendingMoney, setIsSendingMoney] = useState(false);
+const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
+  const [IsSendingMoneyVisible, setIsSendingMoneyVisible] = useState(false);
+  const [isTopUpVisible, setIsTopUpVisible] = useState(false);
   const [balance, setBalance] = useState(initialBalance);
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupContent, setPopupContent] = useState<{
@@ -23,11 +23,13 @@ const BankAccount: FC<BankAccountProps> = ({
   }>({ status: "", message: "" });
 
   const handleSendMoney = () => {
-    setIsSendingMoney(true);
+    setIsSendingMoneyVisible(true);
+    setIsTopUpVisible(false);
   };
 
   const handleTopUp = () => {
-    // TODO: Implement logic to top up money
+    setIsSendingMoneyVisible(false);
+    setIsTopUpVisible(true);
   };
 
   const handleTransactionSubmit = async (
@@ -50,11 +52,26 @@ const BankAccount: FC<BankAccountProps> = ({
     }
   };
 
+  const handleTopUpTransactionSubmit = async (
+    amount: number,
+    incomeSource: string
+  ) => {
+    try {
+      const topUpTransactionData = { amount, incomeSource };
+      const response = await topUpMoney(topUpTransactionData);
+
+      handleTransactionResponse(response);
+    } catch (error: any) {
+      console.error("Error submitting top-up transaction:", error.message);
+    }
+  };
+
   const handleTransactionResponse = (response: TransactionResponse) => {
     const { transactionStatus, transactionMessage, newBalance } = response;
 
     setBalance(newBalance);
-    setIsSendingMoney(false);
+    setIsSendingMoneyVisible(false);
+    setIsTopUpVisible(false);
 
     setPopupContent({ status: transactionStatus, message: transactionMessage });
     setPopupVisible(true);
@@ -72,8 +89,10 @@ const BankAccount: FC<BankAccountProps> = ({
     <div className="bank-account-container">
       <BalanceDisplay balance={balance} />
       <div className="buttons-container">
-        {isSendingMoney ? (
+        {IsSendingMoneyVisible ? (
           <MoneySendingForm onSubmit={handleTransactionSubmit} />
+        ) : isTopUpVisible ? (
+          <TopUpForm onSubmit={handleTopUpTransactionSubmit} />
         ) : (
           <>
             <Button onClick={handleSendMoney}>Send</Button>

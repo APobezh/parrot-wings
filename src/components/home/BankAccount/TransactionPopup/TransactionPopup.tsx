@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import './TransactionPopup.css';
 
 interface TransactionPopupProps {
   status: string;
@@ -6,9 +7,11 @@ interface TransactionPopupProps {
   onClose: () => void;
 }
 
-// TODO: Add styles
 const TransactionPopup: FC<TransactionPopupProps> = ({ status, message, onClose }) => (
-  <div className="popup" onClick={onClose}>
+  <div className="popup">
+    <span className="popup-close" onClick={onClose}>
+      &times;
+    </span>
     <p>Status: {status}</p>
     <p>Message: {message}</p>
   </div>

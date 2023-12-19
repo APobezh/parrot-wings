@@ -10,21 +10,23 @@ const TransactionHistory: FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
 
-  // TODO: Fix the issue with the expanded history component and not rewrited page
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchTransactionHistory({ page: currentPage });
-        setTransactions(data.transactions);
-        setTotalPages(data.totalPages);
-        setIsLoading(false);
-      } catch (error) {
-        setError("Error fetching transaction history");
-        setIsLoading(false);
-      }
-    };
+  const fetchData = async (page: number) => {
+    setIsLoading(true);
+    setError(null);
 
-    fetchData();
+    try {
+      const data = await fetchTransactionHistory({ page });
+      setTransactions(data.transactions);
+      setTotalPages(data.totalPages);
+    } catch (error) {
+      setError("Error fetching transaction history");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData(currentPage);
   }, [currentPage]);
 
   if (isLoading) return <LoadingSpinner />;

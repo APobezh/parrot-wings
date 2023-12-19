@@ -5,7 +5,6 @@ import TransactionHistory from '../BankAccount/TransactionHistory/TransactionHis
 import { fetchUserData } from '../../api/api';
 import './Home.css';
 
-// TODO: Fix fetch user data to fetch data after every page refresh
 const Home: FC = () => {
   const [userData, setUserData] = useState<{ firstName: string; balance: number } | null>(null);
 
@@ -24,7 +23,7 @@ const Home: FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="home-container">
       <Header firstName={userData?.firstName || ''} />
       <div className="content-container">
         <BankAccount balance={userData?.balance || 0} />

@@ -1,12 +1,12 @@
 import { FC } from 'react';
+import "./BalanceDisplay.css";
 
 interface BalanceDisplayProps {
   balance: number;
 }
 
-// TODO: Add unique styles
 const BalanceDisplay: FC<BalanceDisplayProps> = ({ balance }) => (
-  <div className="balance-container">
+  <div className="balance-display-container">
     <p className="balance-label">Balance</p>
     <p className="balance-amount">${balance.toFixed(2)}</p>
   </div>

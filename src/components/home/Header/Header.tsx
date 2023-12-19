@@ -1,6 +1,7 @@
-import { FC, useState } from 'react';
-import './Header.css';
-import { useNavigate } from 'react-router-dom';
+import { FC, useState } from "react";
+import "./Header.css";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 
 interface HeaderProps {
   firstName: string;
@@ -8,19 +9,28 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ firstName }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleIconClick = () => {
-    navigate('/');
+    if (isAuthenticated) {
+      window.location.reload();
+    } else {
+      navigate('/login');
+    }
   };
 
-  const handleAccordionClick = () => {
-    setIsAccordionOpen((prev) => !prev);
+  const handleMouseEnter = () => {
+    setIsAccordionOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsAccordionOpen(false);
   };
 
   const handleSignOut = () => {
-    // TODO: Add Sign Out request to API after AuthController completion
-    console.log('Signing out');
+    logout();
+    navigate('/login');
   };
 
   return (
@@ -30,16 +40,22 @@ const Header: FC<HeaderProps> = ({ firstName }) => {
           ⚛️
         </span>
       </div>
-      <div className="user-container">
-        <div className="user-name" onClick={handleAccordionClick}>
+      <div
+        className="user-container"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div className="user-name">
           {firstName}
-          <div className={`accordion-arrow ${isAccordionOpen ? 'open' : ''}`}>&#9660;</div>
-        </div>
-        {isAccordionOpen && (
-          <div className="accordion-content">
-            <button onClick={handleSignOut}>Sign Out</button>
+          <div className={`accordion-arrow ${isAccordionOpen ? "open" : ""}`}>
+            &#9660;
           </div>
-        )}
+        </div>
+        <div
+          className={`accordion-content ${isAccordionOpen ? "visible" : ""}`}
+        >
+          <button onClick={handleSignOut}>Sign Out</button>
+        </div>
       </div>
     </div>
   );

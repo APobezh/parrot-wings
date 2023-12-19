@@ -1,5 +1,14 @@
+.home-container {
+  background-color: #3498db;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .content-container {
   display: flex;
-  justify-content: space-around;
-  margin-top: 60px;
+  align-items: center;
+  padding: 20px;
 }

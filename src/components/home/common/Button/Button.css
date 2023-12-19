@@ -1,7 +1,7 @@
 .custom-button {
   position: relative;
   overflow: hidden;
-  background-color: #e56020;
+  background-color: #3498db;
   color: #fff;
   padding: 10px 20px;
   font-size: 1em;
@@ -23,5 +23,5 @@
 }
 
 .custom-button:hover {
-  background-color: #d3571e;
+  background-color: #2980b9;
 }
