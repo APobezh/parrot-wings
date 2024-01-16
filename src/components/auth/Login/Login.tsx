@@ -1,19 +1,25 @@
-import { FC, FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Button from "../../home/common/Button/Button";
-import { useAuth } from "../AuthContext";
-import { loginUser, LoginRequest } from "../../api/api";
-import "./Login.css";
+import { FC, FormEvent, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from '../../home/common/Button/Button';
+import { useAuth } from '../AuthContext';
+import { loginUser, LoginRequest } from '../../api/api';
+import './Login.css';
 
 const Login: FC = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
 
   const [credentials, setCredentials] = useState<LoginRequest>({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -22,10 +28,10 @@ const Login: FC = () => {
       // TODO: Use response message later
       await loginUser(credentials);
       login();
-      navigate("/home");
+      navigate('/home');
     } catch (error) {
-      console.error("Error during login:", error);
-      setError("Authentication failed. Please try again later.");
+      console.error('Error during login:', error);
+      setError('Authentication failed. Please try again later.');
     }
   };
 

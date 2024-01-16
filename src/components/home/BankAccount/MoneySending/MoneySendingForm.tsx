@@ -1,15 +1,21 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import Button from "../../common/Button/Button";
-import { validateEmail , validateAmount } from "../../../../utils/validation";
+import { validateEmail, validateAmount } from "../../../../utils/validation";
 import "./MoneySendingForm.css";
 
 interface MoneySendingFormProps {
   onSubmit: (amount: number, recipientEmail: string) => void;
+  initialAmount?: number;
+  initialRecipientEmail?: string;
 }
 
-const MoneySendingForm: FC<MoneySendingFormProps> = ({ onSubmit }) => {
-  const [amount, setAmount] = useState("");
-  const [recipientEmail, setRecipientEmail] = useState("");
+const MoneySendingForm: FC<MoneySendingFormProps> = ({
+  onSubmit,
+  initialAmount = 0,
+  initialRecipientEmail = '',
+}) => {
+  const [amount, setAmount] = useState(initialAmount);
+  const [recipientEmail, setRecipientEmail] = useState(initialRecipientEmail);
   const [amountError, setAmountError] = useState("");
   const [emailError, setEmailError] = useState("");
 
@@ -17,7 +23,7 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({ onSubmit }) => {
     setAmountError("");
     setEmailError("");
 
-    if (!validateAmount(amount)) {
+    if (!validateAmount(parseFloat(amount.toString()))) {
       setAmountError("Please enter a valid amount greater than 0.");
     }
 
@@ -26,8 +32,19 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({ onSubmit }) => {
       return;
     }
 
-    onSubmit(parseFloat(amount), recipientEmail);
+    onSubmit(parseFloat(amount.toString()), recipientEmail);
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleTransactionSubmit();
+    }
+  };
+
+  useEffect(() => {
+    setAmount(initialAmount);
+    setRecipientEmail(initialRecipientEmail);
+  }, [initialAmount, initialRecipientEmail]);
 
   return (
     <div className="money-sending-form-container">
@@ -36,10 +53,12 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({ onSubmit }) => {
           Amount:
         </label>
         <input
-          type="text"
+          type="number"
           id="amount"
+          placeholder="Enter amount"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => setAmount(parseFloat(e.target.value))}
+          onKeyDown={handleKeyDown}
           className="input-field"
         />
         {amountError && <div className="error-message">{amountError}</div>}
@@ -60,7 +79,12 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({ onSubmit }) => {
       </div>
 
       <div className="button-container">
-        <Button onClick={handleTransactionSubmit}>Submit transaction</Button>
+        <Button
+          onClick={handleTransactionSubmit}
+          disabled={!!amountError || !!emailError}
+        >
+          Submit transaction
+        </Button>
       </div>
     </div>
   );

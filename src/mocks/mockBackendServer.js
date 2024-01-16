@@ -63,7 +63,7 @@ app.post('/api/Transaction/TopUpMoney', (req, res) => {
 
 app.post('/api/Transactions/History', (req, res) => {
   let transactions = [];
-  
+
   transactions.push(generateTransaction());
   transactions.push(generateTransaction());
   transactions.push(generateTransaction());
@@ -79,7 +79,7 @@ app.post('/api/Transactions/History', (req, res) => {
 
   const totalPages = 2;
   const page = 1;
-  const pageSize = 10;
+  const pageSize = 5;
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const paginatedTransactions = transactions.slice(startIndex, endIndex);

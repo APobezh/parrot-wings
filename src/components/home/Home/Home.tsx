@@ -2,11 +2,15 @@ import { FC, useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import BankAccount from '../BankAccount/BankAccount';
 import TransactionHistory from '../BankAccount/TransactionHistory/TransactionHistory';
+import { Transaction } from '../../api/api';
+import MoneySendingForm from '../BankAccount/MoneySending/MoneySendingForm';
 import { fetchUserData } from '../../api/api';
 import './Home.css';
 
 const Home: FC = () => {
   const [userData, setUserData] = useState<{ firstName: string; balance: number } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -15,19 +19,47 @@ const Home: FC = () => {
         const user = await fetchUserData();
         setUserData(user);
       } catch (error: any) {
-        console.error(error.message);
+        console.error('Error fetching user data:', error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchUser();
   }, []);
 
+  const handleTransactionClick = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+  };
+
+  const resetSelectedTransaction = () => {
+    setSelectedTransaction(null);
+  };
+
   return (
     <div className="home-container">
       <Header firstName={userData?.firstName || ''} />
       <div className="content-container">
-        <BankAccount balance={userData?.balance || 0} />
-        <TransactionHistory />
+        {loading ? (
+          <p>Loading...</p>
+        ) : userData ? (
+          <>
+            <BankAccount balance={userData.balance || 0} />
+            <TransactionHistory onTransactionClick={handleTransactionClick} />
+            {selectedTransaction && (
+              <MoneySendingForm
+                onSubmit={(amount, recipientEmail) => {
+                  console.log('Submitting form with data:', amount, recipientEmail);
+                  resetSelectedTransaction();
+                }}
+                initialAmount={selectedTransaction.sum}
+                initialRecipientEmail={selectedTransaction.receiver}
+              />
+            )}
+          </>
+        ) : (
+          <p>Error loading user data</p>
+        )}
       </div>
     </div>
   );

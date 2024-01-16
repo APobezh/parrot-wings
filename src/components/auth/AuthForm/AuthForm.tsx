@@ -1,10 +1,20 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 import Login from './../Login/Login';
 import SignUp from './../SignUp/SignUp';
 import './AuthForm.css';
 
 const AuthForm: FC = () => {
   const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/home');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleTabChange = (tab: 'login' | 'signup') => {
     setActiveTab(tab);

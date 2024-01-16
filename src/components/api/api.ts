@@ -50,6 +50,7 @@ export interface Transaction {
 
 export interface TransactionHistoryRequest {
   page: number;
+  recordsPerPage: number;
 }
 
 export interface TransactionHistoryResponse {

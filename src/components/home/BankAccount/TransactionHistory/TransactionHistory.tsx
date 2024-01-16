@@ -3,7 +3,11 @@ import { fetchTransactionHistory, Transaction } from "../../../api/api";
 import "./TransactionHistory.css";
 import LoadingSpinner from "../../common/Spinner/LoadingSpinner";
 
-const TransactionHistory: FC = () => {
+interface TransactionHistoryProps {
+  onTransactionClick: (transaction: Transaction) => void;
+}
+
+const TransactionHistory: FC<TransactionHistoryProps> = ({ onTransactionClick }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -15,7 +19,8 @@ const TransactionHistory: FC = () => {
     setError(null);
 
     try {
-      const data = await fetchTransactionHistory({ page });
+      const recordsPerPage = 5;
+      const data = await fetchTransactionHistory({ page, recordsPerPage });
       setTransactions(data.transactions);
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -29,8 +34,9 @@ const TransactionHistory: FC = () => {
     fetchData(currentPage);
   }, [currentPage]);
 
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <div>{error}</div>;
+  if (isLoading || error) {
+    return isLoading ? <LoadingSpinner /> : <div>{error}</div>;
+  }
 
   return (
     <div className="transaction-history-container">
@@ -39,12 +45,13 @@ const TransactionHistory: FC = () => {
         {transactions.map((transaction: Transaction) => (
           <li
             key={transaction.id}
-            className={transaction.sum < 0 ? "withdrawal" : "deposit"}
+            className={transaction.sum < 0 ? "negative" : "positive"}
+            onClick={() => onTransactionClick(transaction)}
           >
-            <span>Date: {transaction.date}</span>
-            <span>Sum: ${Math.abs(transaction.sum)}</span>
-            <span>Sender: {transaction.sender}</span>
-            <span>Receiver: {transaction.receiver}</span>
+            <div>Date: {transaction.date}</div>
+            <div>Amount: {Math.abs(transaction.sum)} PW</div>
+            <div>Sender: {transaction.sender}</div>
+            <div>Receiver: {transaction.receiver}</div>
           </li>
         ))}
       </ul>

@@ -43,11 +43,11 @@
   background-color: rgba(255, 255, 255, 1);
 }
 
-.transaction-history-container .withdrawal {
+.transaction-history-container .negative {
   border-left: 5px solid #e74c3c;
 }
 
-.transaction-history-container .deposit {
+.transaction-history-container .positive {
   border-left: 5px solid #2ecc71;
 }
 

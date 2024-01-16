@@ -3,7 +3,7 @@ export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
-export const validateAmount = (value: string): boolean => {
-  const parsedValue = parseFloat(value);
+export const validateAmount = (value: number): boolean => {
+  const parsedValue = parseFloat(value.toString());
   return !isNaN(parsedValue) && isFinite(parsedValue) && parsedValue > 0;
 };

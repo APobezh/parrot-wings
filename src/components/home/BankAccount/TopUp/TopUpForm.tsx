@@ -8,7 +8,7 @@ interface TopUpFormProps {
 }
 
 const TopUpForm: FC<TopUpFormProps> = ({ onSubmit }) => {
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [incomeSource, setIncomeSource] = useState("");
   const [amountError, setAmountError] = useState("");
   const [incomeSourceError, setIncomeSourceError] = useState("");
@@ -26,7 +26,7 @@ const TopUpForm: FC<TopUpFormProps> = ({ onSubmit }) => {
     }
 
     if (validateAmount(amount) && validateIncomeSource(incomeSource)) {
-      onSubmit(parseFloat(amount), incomeSource);
+      onSubmit(amount, incomeSource);
     }
   };
 
@@ -44,7 +44,7 @@ const TopUpForm: FC<TopUpFormProps> = ({ onSubmit }) => {
           type="text"
           id="amount"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => setAmount(parseFloat(e.target.value))}
           className="input-field"
         />
         {amountError && <div className="error-message">{amountError}</div>}
