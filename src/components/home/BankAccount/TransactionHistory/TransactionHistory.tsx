@@ -45,11 +45,11 @@ const TransactionHistory: FC<TransactionHistoryProps> = ({ onTransactionClick })
         {transactions.map((transaction: Transaction) => (
           <li
             key={transaction.id}
-            className={transaction.sum < 0 ? "negative" : "positive"}
+            className={transaction.amount < 0 ? "negative" : "positive"}
             onClick={() => onTransactionClick(transaction)}
           >
             <div>Date: {transaction.date}</div>
-            <div>Amount: {Math.abs(transaction.sum)} PW</div>
+            <div>Amount: {Math.abs(transaction.amount)} PW</div>
             <div>Sender: {transaction.sender}</div>
             <div>Receiver: {transaction.receiver}</div>
           </li>

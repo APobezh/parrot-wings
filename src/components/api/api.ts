@@ -43,7 +43,7 @@ export interface TransactionResponse {
 export interface Transaction {
   id: number;
   date: string;
-  sum: number;
+  amount: number;
   sender: string;
   receiver: string;
 }

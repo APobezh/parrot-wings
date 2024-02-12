@@ -1,9 +1,10 @@
 .auth-form-container {
-  max-width: 400px;
+  max-width: 480px;
+  min-height: 75vh;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f8f8f8;
-  border-radius: 10px;
+  background-color: #ffffff;
+  border-radius: 25px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -22,12 +23,14 @@
   font-size: 1em;
   font-weight: bolder;
   outline: none;
+  border-radius: 15px;
 }
 
 .tabs-container button.active {
-  background-color: #2980b9;
-  border-radius: 5px;
+  background-color: #fa3f07;
+  border-radius: 15px;
   position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .tabs-container button.active:before {

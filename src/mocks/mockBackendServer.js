@@ -35,7 +35,7 @@ const mockedTransactionResponse = {
 const generateTransaction = () => ({
   id: Math.floor(Math.random() * 1000),
   date: new Date().toUTCString(),
-  sum: Math.random() * 100,
+  amount: Math.random() * 100,
   sender: 'johndoe@example.com',
   receiver: 'johndoejunior@example.com',
 });

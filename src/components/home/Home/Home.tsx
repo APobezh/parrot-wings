@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import BankAccount from '../BankAccount/BankAccount';
-import TransactionHistory from '../BankAccount/TransactionHistory/TransactionHistory';
 import { Transaction } from '../../api/api';
 import MoneySendingForm from '../BankAccount/MoneySending/MoneySendingForm';
 import { fetchUserData } from '../../api/api';
@@ -28,10 +27,6 @@ const Home: FC = () => {
     fetchUser();
   }, []);
 
-  const handleTransactionClick = (transaction: Transaction) => {
-    setSelectedTransaction(transaction);
-  };
-
   const resetSelectedTransaction = () => {
     setSelectedTransaction(null);
   };
@@ -45,14 +40,13 @@ const Home: FC = () => {
         ) : userData ? (
           <>
             <BankAccount balance={userData.balance || 0} />
-            <TransactionHistory onTransactionClick={handleTransactionClick} />
             {selectedTransaction && (
               <MoneySendingForm
                 onSubmit={(amount, recipientEmail) => {
                   console.log('Submitting form with data:', amount, recipientEmail);
                   resetSelectedTransaction();
                 }}
-                initialAmount={selectedTransaction.sum}
+                initialAmount={selectedTransaction.amount}
                 initialRecipientEmail={selectedTransaction.receiver}
               />
             )}

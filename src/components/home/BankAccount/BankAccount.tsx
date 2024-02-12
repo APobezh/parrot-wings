@@ -4,16 +4,17 @@ import Button from "../common/Button/Button";
 import BalanceDisplay from "./BalanceDisplay/BalanceDisplay";
 import MoneySendingForm from "./MoneySending/MoneySendingForm";
 import TopUpForm from "./TopUp/TopUpForm";
+import TransactionHistory from "./TransactionHistory/TransactionHistory";
 import TransactionPopup from "./TransactionPopup/TransactionPopup";
 import { validateEmail } from "../../../utils/validation";
-import { sendMoney, topUpMoney, TransactionResponse } from "../../api/api";
+import { sendMoney, topUpMoney, TransactionResponse, Transaction } from "../../api/api";
 
 interface BankAccountProps {
   balance: number;
 }
 
 const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
-  const [IsSendingMoneyVisible, setIsSendingMoneyVisible] = useState(false);
+  const [isSendingMoneyVisible, setIsSendingMoneyVisible] = useState(false);
   const [isTopUpVisible, setIsTopUpVisible] = useState(false);
   const [balance, setBalance] = useState(initialBalance);
   const [popupVisible, setPopupVisible] = useState(false);
@@ -21,6 +22,7 @@ const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
     status: string;
     message: string;
   }>({ status: "", message: "" });
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   const handleSendMoney = () => {
     setIsSendingMoneyVisible(true);
@@ -85,12 +87,22 @@ const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
     setPopupVisible(false);
   };
 
+  const handleTransactionClick = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setIsSendingMoneyVisible(true);
+    setIsTopUpVisible(false);
+  };
+
   return (
     <div className="bank-account-container">
       <BalanceDisplay balance={balance} />
       <div className="buttons-container">
-        {IsSendingMoneyVisible ? (
-          <MoneySendingForm onSubmit={handleTransactionSubmit} />
+        {isSendingMoneyVisible ? (
+          <MoneySendingForm
+            onSubmit={handleTransactionSubmit}
+            initialAmount={selectedTransaction ? selectedTransaction.amount : 0}
+            initialRecipientEmail={selectedTransaction ? selectedTransaction.receiver : ''}
+          />
         ) : isTopUpVisible ? (
           <TopUpForm onSubmit={handleTopUpTransactionSubmit} />
         ) : (
@@ -100,6 +112,7 @@ const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
           </>
         )}
       </div>
+      <TransactionHistory onTransactionClick={handleTransactionClick} />
       {popupVisible && (
         <TransactionPopup
           status={popupContent.status}
