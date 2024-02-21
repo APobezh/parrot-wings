@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
+import PropTypes from "prop-types";
 import Button from "../../common/Button/Button";
-import { validateAmount } from "../../../../utils/validation";
+import { validateAmount, validateIncomeSource } from "../../../../utils/validation";
 import "./TopUpForm.css";
 
 interface TopUpFormProps {
@@ -8,30 +9,30 @@ interface TopUpFormProps {
 }
 
 const TopUpForm: FC<TopUpFormProps> = ({ onSubmit }) => {
-  const [amount, setAmount] = useState(0);
-  const [incomeSource, setIncomeSource] = useState("");
-  const [amountError, setAmountError] = useState("");
-  const [incomeSourceError, setIncomeSourceError] = useState("");
+  const [amount, setAmount] = useState<number>(0);
+  const [incomeSource, setIncomeSource] = useState<string>("");
+  const [amountError, setAmountError] = useState<string>("");
+  const [incomeSourceError, setIncomeSourceError] = useState<string>("");
 
   const handleTopUpSubmit = () => {
-    setAmountError("");
-    setIncomeSourceError("");
+    const amountIsValid = validateAmount(amount);
+    const incomeSourceIsValid = validateIncomeSource(incomeSource);
 
-    if (!validateAmount(amount)) {
+    if (!amountIsValid) {
       setAmountError("Please enter a valid amount greater than 0.");
+    } else {
+      setAmountError("");
     }
 
-    if (!validateIncomeSource(incomeSource)) {
+    if (!incomeSourceIsValid) {
       setIncomeSourceError("Please enter a valid income source.");
+    } else {
+      setIncomeSourceError("");
     }
 
-    if (validateAmount(amount) && validateIncomeSource(incomeSource)) {
+    if (amountIsValid && incomeSourceIsValid) {
       onSubmit(amount, incomeSource);
     }
-  };
-
-  const validateIncomeSource = (value: string): boolean => {
-    return value.trim() !== "" && !/^\s+$/.test(value);
   };
 
   return (
@@ -41,11 +42,12 @@ const TopUpForm: FC<TopUpFormProps> = ({ onSubmit }) => {
           Amount:
         </label>
         <input
-          type="text"
+          type="number"
           id="amount"
           value={amount}
           onChange={(e) => setAmount(parseFloat(e.target.value))}
           className="input-field"
+          min={0}
         />
         {amountError && <div className="error-message">{amountError}</div>}
       </div>
@@ -71,6 +73,10 @@ const TopUpForm: FC<TopUpFormProps> = ({ onSubmit }) => {
       </div>
     </div>
   );
+};
+
+TopUpForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
 
 export default TopUpForm;

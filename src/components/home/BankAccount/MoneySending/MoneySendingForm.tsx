@@ -1,9 +1,12 @@
-import { FC, useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import Button from "../../common/Button/Button";
-import { validateAmount } from "../../../../utils/validation";
-import { UserDataResponse } from "../../../../interfaces/interfaces";
+import { validateAmount, validateEmail } from "../../../../utils/validation";
+import {
+  UserDataResponse,
+  Transaction,
+} from "../../../../interfaces/interfaces";
 import { apiService } from "../../../../services/apiService";
-import { Transaction } from "../../../../interfaces/interfaces";
 
 interface MoneySendingFormProps {
   onSubmit: (amount: number, recipientEmail: string) => void;
@@ -16,7 +19,7 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({
   onSubmit,
   initialAmount = 0,
   initialRecipientEmail = "",
-  transaction
+  transaction,
 }) => {
   const [amount, setAmount] = useState<number>(initialAmount);
   const [recipientEmail, setRecipientEmail] = useState<string>(
@@ -27,13 +30,14 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({
 
   useEffect(() => {
     if (transaction) {
-      setAmount(transaction.amount);
-      setRecipientEmail(transaction.receiver);
+      const { amount, receiver } = transaction;
+      setAmount(amount);
+      setRecipientEmail(receiver);
     } else {
-      setAmount(0);
-      setRecipientEmail('');
+      setAmount(initialAmount);
+      setRecipientEmail(initialRecipientEmail);
     }
-  }, [transaction]);
+  }, [transaction, initialAmount, initialRecipientEmail]);
 
   useEffect(() => {
     fetchUsers();
@@ -48,16 +52,29 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({
     }
   };
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(parseFloat(e.target.value));
+  };
+
+  const handleRecipientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setRecipientEmail(e.target.value);
+  };
+
   const handleTransactionSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setAmountError("");
 
-    if (!validateAmount(parseFloat(amount.toString()))) {
+    if (!validateAmount(amount)) {
       setAmountError("Please enter a valid amount greater than 0.");
       return;
     }
 
-    onSubmit(parseFloat(amount.toString()), recipientEmail);
+    if (!validateEmail(recipientEmail)) {
+      setAmountError("Please select a valid recipient email.");
+      return;
+    }
+
+    onSubmit(amount, recipientEmail);
   };
 
   return (
@@ -71,7 +88,7 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({
           id="amount"
           placeholder="Enter amount"
           value={amount}
-          onChange={(e) => setAmount(parseFloat(e.target.value))}
+          onChange={handleAmountChange}
           className="input-field"
         />
         {amountError && <div className="error-message">{amountError}</div>}
@@ -84,7 +101,7 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({
         <select
           id="recipientEmail"
           value={recipientEmail}
-          onChange={(e) => setRecipientEmail(e.target.value)}
+          onChange={handleRecipientChange}
           className="input-field"
         >
           <option value="">Select recipient...</option>
@@ -105,6 +122,19 @@ const MoneySendingForm: FC<MoneySendingFormProps> = ({
       </div>
     </div>
   );
+};
+
+MoneySendingForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  initialAmount: PropTypes.number,
+  initialRecipientEmail: PropTypes.string,
+  transaction: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    date: PropTypes.string.isRequired,
+    amount: PropTypes.number.isRequired,
+    sender: PropTypes.string.isRequired,
+    receiver: PropTypes.string.isRequired,
+  }),
 };
 
 export default MoneySendingForm;
