@@ -4,7 +4,8 @@ import "./SignUp.css";
 import Button from "../../home/common/Button/Button";
 import { useAuth } from "../AuthContext";
 import { validateEmail } from "../../../utils/validation";
-import { registerUser, RegisterRequest } from "../../api/api";
+import { apiService } from "../../../services/apiService";
+import { RegisterRequest } from "../../../interfaces/interfaces";
 
 const SignUp: FC = () => {
   const navigate = useNavigate();
@@ -34,12 +35,14 @@ const SignUp: FC = () => {
 
     try {
       // TODO: Use response message later
-      await registerUser(formData);
+      await apiService.register(formData);
       login();
       navigate("/home");
     } catch (error) {
       console.error("Error during login:", error);
-      setError("Registration or authentication failed. Please try again later.");
+      setError(
+        "Registration or authentication failed. Please try again later."
+      );
     }
   };
 

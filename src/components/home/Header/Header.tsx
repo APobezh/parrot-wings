@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
-import logo from '../../../images/logo.png';
+import logo from "../../../assets/images/logo.png"
 
 interface HeaderProps {
   firstName: string;

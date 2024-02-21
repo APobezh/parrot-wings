@@ -2,7 +2,8 @@ import { FC, FormEvent, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../home/common/Button/Button';
 import { useAuth } from '../AuthContext';
-import { loginUser, LoginRequest } from '../../api/api';
+import { apiService } from '../../../services/apiService';
+import { LoginRequest } from '../../../interfaces/interfaces';
 import './Login.css';
 
 const Login: FC = () => {
@@ -26,7 +27,7 @@ const Login: FC = () => {
 
     try {
       // TODO: Use response message later
-      await loginUser(credentials);
+      await apiService.login(credentials);
       login();
       navigate('/home');
     } catch (error) {

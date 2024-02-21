@@ -1,9 +1,9 @@
 import { FC, useEffect, useState } from 'react';
 import Header from '../Header/Header';
 import BankAccount from '../BankAccount/BankAccount';
-import { Transaction } from '../../api/api';
 import MoneySendingForm from '../BankAccount/MoneySending/MoneySendingForm';
-import { fetchUserData } from '../../api/api';
+import { apiService } from '../../../services/apiService';
+import { Transaction } from '../../../interfaces/interfaces';
 import './Home.css';
 
 const Home: FC = () => {
@@ -15,7 +15,7 @@ const Home: FC = () => {
     const fetchUser = async () => {
       try {
         console.log('Fetching user data');
-        const user = await fetchUserData();
+        const user = await apiService.fetchUserData();
         setUserData(user);
       } catch (error: any) {
         console.error('Error fetching user data:', error.message);
@@ -48,6 +48,7 @@ const Home: FC = () => {
                 }}
                 initialAmount={selectedTransaction.amount}
                 initialRecipientEmail={selectedTransaction.receiver}
+                transaction={selectedTransaction}
               />
             )}
           </>

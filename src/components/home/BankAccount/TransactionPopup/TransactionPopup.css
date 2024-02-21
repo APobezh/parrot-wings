@@ -1,40 +1,40 @@
 .popup {
-    background-color: #ffffff;
-    border-radius: 15px;
-    padding: 20px;
-    max-width: 300px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    cursor: pointer;
-    overflow: hidden;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.popup:hover {
-    background-color: #f0f0f0;
+  background: linear-gradient(
+    rgba(192, 57, 43, 0.95),
+    rgba(41, 128, 185, 0.95)
+  );
+  border-radius: 15px;
+  padding: 20px;
+  max-width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 0.3s ease-in-out;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .popup p {
-    color: #333;
-    font-size: 1.2em;
-    margin-bottom: 10px;
+  color: #fff;
+  font-size: 1.2em;
+  margin-bottom: 10px;
 }
 
 .popup-close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    color: #555;
-    font-size: 1.2em;
-    transition: color 0.3s ease-in-out;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.2em;
+  transition: color 0.3s ease-in-out;
 }
 
 .popup-close:hover {
-    color: #333;
+  color: #ccc;
 }

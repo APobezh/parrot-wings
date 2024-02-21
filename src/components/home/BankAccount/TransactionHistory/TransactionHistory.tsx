@@ -1,13 +1,18 @@
 import { FC, useState, useEffect } from "react";
-import { fetchTransactionHistory, Transaction } from "../../../api/api";
 import "./TransactionHistory.css";
 import LoadingSpinner from "../../common/Spinner/LoadingSpinner";
+import TransactionList from "./TransactionList/TransactionList";
+import Pagination from "./Pagination/Pagination";
+import { Transaction } from "../../../../interfaces/interfaces";
+import { apiService } from "../../../../services/apiService";
 
 interface TransactionHistoryProps {
   onTransactionClick: (transaction: Transaction) => void;
 }
 
-const TransactionHistory: FC<TransactionHistoryProps> = ({ onTransactionClick }) => {
+const TransactionHistory: FC<TransactionHistoryProps> = ({
+  onTransactionClick,
+}) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +25,10 @@ const TransactionHistory: FC<TransactionHistoryProps> = ({ onTransactionClick })
 
     try {
       const recordsPerPage = 5;
-      const data = await fetchTransactionHistory({ page, recordsPerPage });
+      const data = await apiService.fetchTransactionHistory({
+        page,
+        recordsPerPage,
+      });
       setTransactions(data.transactions);
       setTotalPages(data.totalPages);
     } catch (error) {
@@ -34,39 +42,30 @@ const TransactionHistory: FC<TransactionHistoryProps> = ({ onTransactionClick })
     fetchData(currentPage);
   }, [currentPage]);
 
-  if (isLoading || error) {
-    return isLoading ? <LoadingSpinner /> : <div>{error}</div>;
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
   }
 
   return (
-    <div className="transaction-history-container">
+    <div className="transaction-history-wrapper">
       <h2>Transaction History</h2>
-      <ul>
-        {transactions.map((transaction: Transaction) => (
-          <li
-            key={transaction.id}
-            className={transaction.amount < 0 ? "negative" : "positive"}
-            onClick={() => onTransactionClick(transaction)}
-          >
-            <div>Date: {transaction.date}</div>
-            <div>Amount: {Math.abs(transaction.amount)} PW</div>
-            <div>Sender: {transaction.sender}</div>
-            <div>Receiver: {transaction.receiver}</div>
-          </li>
-        ))}
-      </ul>
-
-      <div className="pagination-container">
-        {Array.from({ length: totalPages }).map((_, index) => (
-          <button
-            key={index + 1}
-            onClick={() => setCurrentPage(index + 1)}
-            className={currentPage === index + 1 ? "active" : ""}
-          >
-            {index + 1}
-          </button>
-        ))}
-      </div>
+      <TransactionList
+        transactions={transactions}
+        onTransactionClick={onTransactionClick}
+      />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageClick={handlePageClick}
+      />
     </div>
   );
 };

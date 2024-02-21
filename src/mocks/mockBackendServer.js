@@ -8,12 +8,6 @@ const port = 3001;
 app.use(bodyParser.json());
 app.use(cors());
 
-// Mocked user data
-const mockedUserData = {
-  firstName: 'John',
-  balance: Math.random() * 100,
-};
-
 // Mocked login response
 const mockedLoginResponse = {
   message: 'Login successful',
@@ -31,18 +25,96 @@ const mockedTransactionResponse = {
   newBalance: Math.random() * 100,
 };
 
-// Mocked transaction response
+// Generate random transaction
 const generateTransaction = () => ({
   id: Math.floor(Math.random() * 1000),
   date: new Date().toUTCString(),
   amount: Math.random() * 100,
-  sender: 'johndoe@example.com',
-  receiver: 'johndoejunior@example.com',
+  sender: 'john@example.com',
+  receiver: 'bob@example.com',
 });
+
+// Mocked user list
+const mockedUserList = [
+  {
+    id: 1,
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 2,
+    firstName: 'Bob',
+    lastName: 'Johnson',
+    email: 'bob@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 3,
+    firstName: 'Charlie',
+    lastName: 'Brown',
+    email: 'charlie@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 4,
+    firstName: 'David',
+    lastName: 'Lee',
+    email: 'david@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 5,
+    firstName: 'Emma',
+    lastName: 'Davis',
+    email: 'emma@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 6,
+    firstName: 'Frank',
+    lastName: 'Garcia',
+    email: 'frank@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 7,
+    firstName: 'Grace',
+    lastName: 'Martinez',
+    email: 'grace@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 8,
+    firstName: 'Henry',
+    lastName: 'Young',
+    email: 'henry@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 9,
+    firstName: 'Isabella',
+    lastName: 'Lopez',
+    email: 'isabella@example.com',
+    balance: Math.random() * 100,
+  },
+  {
+    id: 10,
+    firstName: 'Jack',
+    lastName: 'Hernandez',
+    email: 'jack@example.com',
+    balance: Math.random() * 100,
+  },
+];
 
 // Mocked API endpoints
 app.get('/api/User', (req, res) => {
-  res.json(mockedUserData);
+  res.json(mockedUserList.find(user => user.id === 1));
+});
+
+app.get('/api/Users', (req, res) => {
+  res.json(mockedUserList.filter(user => user.id !== 1));
 });
 
 app.post('/api/Login', (req, res) => {
@@ -62,27 +134,13 @@ app.post('/api/Transaction/TopUpMoney', (req, res) => {
 });
 
 app.post('/api/Transactions/History', (req, res) => {
-  let transactions = [];
-
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-  transactions.push(generateTransaction());
-
-  const totalPages = 2;
-  const page = 1;
+  const transactions = Array.from({ length: 100 }, generateTransaction);
+  const page = req.body.page || 1;
   const pageSize = 5;
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
   const paginatedTransactions = transactions.slice(startIndex, endIndex);
+  const totalPages = Math.ceil(transactions.length / pageSize);
 
   res.json({
     transactions: paginatedTransactions,
@@ -90,6 +148,10 @@ app.post('/api/Transactions/History', (req, res) => {
   });
 });
 
+// Mocked API endpoint to get list of users
+app.get('/api/Users', (req, res) => {
+  res.json(mockedUserList);
+});
 
 app.listen(port, () => {
   console.log(`Mock server is running at http://localhost:${port}`);

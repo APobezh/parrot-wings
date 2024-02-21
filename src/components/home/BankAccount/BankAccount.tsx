@@ -7,7 +7,8 @@ import TopUpForm from "./TopUp/TopUpForm";
 import TransactionHistory from "./TransactionHistory/TransactionHistory";
 import TransactionPopup from "./TransactionPopup/TransactionPopup";
 import { validateEmail } from "../../../utils/validation";
-import { sendMoney, topUpMoney, TransactionResponse, Transaction } from "../../api/api";
+import { apiService } from "../../../services/apiService";
+import { Transaction, TransactionResponse } from "../../../interfaces/interfaces";
 
 interface BankAccountProps {
   balance: number;
@@ -46,7 +47,7 @@ const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
       }
 
       const transactionData = { amount, recipientEmail };
-      const response = await sendMoney(transactionData);
+      const response = await apiService.sendMoney(transactionData);
 
       handleTransactionResponse(response);
     } catch (error: any) {
@@ -60,7 +61,7 @@ const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
   ) => {
     try {
       const topUpTransactionData = { amount, incomeSource };
-      const response = await topUpMoney(topUpTransactionData);
+      const response = await apiService.topUpMoney(topUpTransactionData);
 
       handleTransactionResponse(response);
     } catch (error: any) {
@@ -102,6 +103,7 @@ const BankAccount: FC<BankAccountProps> = ({ balance: initialBalance }) => {
             onSubmit={handleTransactionSubmit}
             initialAmount={selectedTransaction ? selectedTransaction.amount : 0}
             initialRecipientEmail={selectedTransaction ? selectedTransaction.receiver : ''}
+            transaction={selectedTransaction}
           />
         ) : isTopUpVisible ? (
           <TopUpForm onSubmit={handleTopUpTransactionSubmit} />
